@@ -19,8 +19,8 @@ export default function Header() {
 						>
 							<Image
 								src='/icons/logo.svg'
-								width={40}
-								height={40}
+								width={50}
+								height={50}
 								alt={`${APP_NAME} logo`}
 							/>
 							{APP_NAME}
