@@ -5,13 +5,15 @@ import ProductSlider from '@/components/shared/product/product-slider'
 import { Card, CardContent } from '@/components/ui/card'
 
 import {
-  getProductsForCard,
-  getProductsByTag,
-  getAllCategories,
+    getAllCategories,
+    getProductsByTag,
+    getProductsForCard,
 } from '@/lib/actions/product.actions'
 import { getSetting } from '@/lib/actions/setting.actions'
 import { toSlug } from '@/lib/utils'
 import { getTranslations } from 'next-intl/server'
+
+export const dynamic = 'force-dynamic'
 
 export default async function HomePage() {
   const t = await getTranslations('Home')

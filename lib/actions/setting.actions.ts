@@ -1,10 +1,10 @@
 'use server'
 import { ISettingInput } from '@/types'
-import data from '../data'
-import Setting from '../db/models/setting.model'
-import { connectToDatabase } from '../db'
-import { formatError } from '../utils'
 import { cookies } from 'next/headers'
+import data from '../data'
+import { connectToDatabase } from '../db'
+import Setting from '../db/models/setting.model'
+import { formatError } from '../utils'
 
 const globalForSettings = global as unknown as {
   cachedSettings: ISettingInput | null
@@ -17,12 +17,17 @@ export const getNoCachedSetting = async (): Promise<ISettingInput> => {
 
 export const getSetting = async (): Promise<ISettingInput> => {
   if (!globalForSettings.cachedSettings) {
-    console.log('hit db')
-    await connectToDatabase()
-    const setting = await Setting.findOne().lean()
-    globalForSettings.cachedSettings = setting
-      ? JSON.parse(JSON.stringify(setting))
-      : data.settings[0]
+    try {
+      console.log('hit db')
+      await connectToDatabase()
+      const setting = await Setting.findOne().lean()
+      globalForSettings.cachedSettings = setting
+        ? JSON.parse(JSON.stringify(setting))
+        : data.settings[0]
+    } catch (error) {
+      console.error('Failed to connect to database, using default settings:', error)
+      return data.settings[0] as ISettingInput
+    }
   }
   return globalForSettings.cachedSettings as ISettingInput
 }

@@ -1,13 +1,19 @@
 import { notFound } from 'next/navigation'
-import React from 'react'
 
 import { auth } from '@/auth'
 import { getOrderById } from '@/lib/actions/order.actions'
-import PaymentForm from './payment-form'
 import Stripe from 'stripe'
+import PaymentForm from './payment-form'
 
 export const metadata = {
   title: 'Payment',
+}
+
+const getStripe = () => {
+  if (!process.env.STRIPE_SECRET_KEY) {
+    throw new Error('STRIPE_SECRET_KEY is not set')
+  }
+  return new Stripe(process.env.STRIPE_SECRET_KEY)
 }
 
 const CheckoutPaymentPage = async (props: {
@@ -26,7 +32,7 @@ const CheckoutPaymentPage = async (props: {
 
   let client_secret = null
   if (order.paymentMethod === 'Stripe' && !order.isPaid) {
-    const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string)
+    const stripe = getStripe()
     const paymentIntent = await stripe.paymentIntents.create({
       amount: Math.round(order.totalPrice * 100),
       currency: 'USD',
