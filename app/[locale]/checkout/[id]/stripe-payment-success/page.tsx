@@ -5,7 +5,12 @@ import Stripe from 'stripe'
 import { Button } from '@/components/ui/button'
 import { getOrderById } from '@/lib/actions/order.actions'
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string)
+const getStripe = () => {
+  if (!process.env.STRIPE_SECRET_KEY) {
+    throw new Error('STRIPE_SECRET_KEY is not set')
+  }
+  return new Stripe(process.env.STRIPE_SECRET_KEY)
+}
 
 export default async function SuccessPage(props: {
   params: Promise<{
@@ -21,6 +26,7 @@ export default async function SuccessPage(props: {
   const order = await getOrderById(id)
   if (!order) notFound()
 
+  const stripe = getStripe()
   const paymentIntent = await stripe.paymentIntents.retrieve(
     searchParams.payment_intent
   )
