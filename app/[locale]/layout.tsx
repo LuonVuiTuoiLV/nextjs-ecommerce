@@ -1,13 +1,13 @@
-import { Geist, Geist_Mono } from 'next/font/google'
-import '../globals.css'
 import ClientProviders from '@/components/shared/client-providers'
 import { getDirection } from '@/i18n-config'
+import { routing } from '@/i18n/routing'
+import { getSetting } from '@/lib/actions/setting.actions'
 import { NextIntlClientProvider } from 'next-intl'
 import { getMessages } from 'next-intl/server'
-import { routing } from '@/i18n/routing'
-import { notFound } from 'next/navigation'
-import { getSetting } from '@/lib/actions/setting.actions'
+import { Geist, Geist_Mono } from 'next/font/google'
 import { cookies } from 'next/headers'
+import { notFound } from 'next/navigation'
+import '../globals.css'
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -37,7 +37,7 @@ export default async function AppLayout({
   params,
   children,
 }: {
-  params: { locale: string }
+  params: Promise<{ locale: string }>
   children: React.ReactNode
 }) {
   const setting = await getSetting()
