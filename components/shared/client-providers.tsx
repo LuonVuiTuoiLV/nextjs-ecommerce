@@ -1,11 +1,11 @@
 'use client'
-import React from 'react'
 import useCartSidebar from '@/hooks/use-cart-sidebar'
-import CartSidebar from './cart-sidebar'
-import { ThemeProvider } from './theme-provider'
+import { ClientSetting } from '@/types'
+import React from 'react'
 import { Toaster } from '../ui/toaster'
 import AppInitializer from './app-initializer'
-import { ClientSetting } from '@/types'
+import CartSidebar from './cart-sidebar'
+import { ThemeProvider } from './theme-provider'
 
 export default function ClientProviders({
   setting,
@@ -21,6 +21,8 @@ export default function ClientProviders({
       <ThemeProvider
         attribute='class'
         defaultTheme={setting.common.defaultTheme.toLocaleLowerCase()}
+        enableSystem
+        disableTransitionOnChange
       >
         {visible ? (
           <div className='flex min-h-screen'>
